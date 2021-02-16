@@ -1,0 +1,9 @@
+===* ATURAN BERMAIN GAME TIC TAC TOE *===
+
+1. Player memilih kotak Tic Tac Toe dengan menginputkan bilangan bulat sesuai koordinat kotak.
+
+2. Jika pemain menginputkan pilihannya dalam kurun waktu dibawah 5 detik, maka pemain akan diberi tambahan 2 poin. Namun jika lebih dari 5 detik, hanya diberi 1 poin.
+
+3. Jika dalam kurun waktu yang disediakan pemain masih belum menginputkan nilai, maka komputer akan menempatkan X secara acak dan pemain tidak mendapat poin tambahan.
+
+4. Jika pemain menang dalam suatu ronde, maka pemain akan diberikan poin sebesar 10 poin, jika pemain kalah, pemain akan dikurangi poinnya sebesar 6 poin dan pengurangan sebesar 3 poin jika seri.
