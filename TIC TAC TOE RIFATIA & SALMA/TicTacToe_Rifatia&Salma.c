@@ -434,8 +434,8 @@ void countNyawa_Skor(int winner, int *skor, int *live){
 void random_easy(char arr[3][3]){
 	int baris, kolom;
 
-	baris = rand()%2+1;
-	kolom = rand()%2+1;
+	baris = rand()%3;
+	kolom = rand()%3;
 
 	if((arr[baris][kolom] != 'X') && (arr[baris][kolom] != 'O')){
 		printf("Pilihan kotak anda diacak dengan koordinat baris %d dan kolom %d", baris+1, kolom+1);
@@ -551,8 +551,8 @@ int checkfull_medium(char arr[5][5]){
 void random_medium(char arr[5][5]){
 	int baris, kolom;
 
-	baris = rand()%4+1;
-	kolom = rand()%4+1;
+	baris = rand()%5;
+	kolom = rand()%5;
 
 	if((arr[baris][kolom] != 'X') && (arr[baris][kolom] != 'O')){
 		printf("Pilihan kotak anda diacak dengan koordinat baris %d dan kolom %d", baris+1, kolom+1);
@@ -858,8 +858,8 @@ void clearBoard_hard(char arr[7][7]){
 void randomComputer_hard(char arr[7][7]){
 	int baris, kolom;
 
-	baris = rand()%6+1;
-	kolom = rand()%6+1;
+	baris = rand()%7;
+	kolom = rand()%7;
 
 	if((arr[baris][kolom] != 'X') && (arr[baris][kolom] != 'O')){
     	arr[baris][kolom]='O';
@@ -872,8 +872,8 @@ void randomComputer_hard(char arr[7][7]){
 void random_hard(char arr[7][7]){
 	int baris, kolom;
 
-	baris = rand()%6+1;
-	kolom = rand()%6+1;
+	baris = rand()%7;
+	kolom = rand()%7;
 
 	if((arr[baris][kolom] != 'X') && (arr[baris][kolom] != 'O')){
 		printf("Pilihan kotak anda diacak dengan koordinat baris %d dan kolom %d", baris+1, kolom+1);
