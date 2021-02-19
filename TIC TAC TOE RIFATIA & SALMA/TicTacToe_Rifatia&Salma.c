@@ -9,6 +9,13 @@ typedef struct{
 }rule;
 
 void home(){
+	/* 
+	PIC/Author : ver 1 : Salma , ver 2 : Rifatia
+	Deskripsi : Menampilkan halaman utama yang terdiri dari opsi main dan keluar.
+	IS : Layar kosong
+	FS : Layar menjadi tampilan home
+	*/
+	
 	int pilihan;
 	FILE *isiAturan;
 	rule tampilAturan[255];
@@ -32,7 +39,7 @@ void home(){
 		}
 		
 		fclose(isiAturan);
-		printf("click any key to continue\n");
+		printf("\nclick any key to continue\n");
 		getch();
 	}
 	else if(pilihan == 2){
@@ -46,13 +53,89 @@ void home(){
 }
 
 void summary (int a, int b){
-  printf("\nSummary :\n");
-  printf("Nyawa : %d", a);
-  printf("\ntotal skor : %d", b);
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : menampilkan kesimpulan jumlah nyawa dan score
+	IS : kesimpulan jumlah skor dan nyawa belum ditampilkan
+	FS : kesimpulan jumlah skor dan nyawa ditampilkan
+	*/
+
+	printf("\nSummary :\n");
+	printf("Nyawa : %d", a);
+	printf("\ntotal skor : %d", b);
 }
 
-void option_ifwin(){
+void showHighscore(int skor){
+	/* 
+	PIC/Author : Salma Syawalan P
+	Deskripsi : menyimpan ke file dan menampilkan skor tertinggi yang diraih pemain
+	IS : skor tertinggi yang diraih pemain tidak tersimpan dalam file dan tidak ditampilkan
+	FS : skor tertinggi yang diraih pemain tidak tersimpan dalam file dan tidak ditampilkan
+	*/
+	
+	FILE *fp;
+	int highscore;
+	
+	fp = fopen("highscore.txt", "r+");
+	highscore = getw(fp);
+	fclose(fp);
+	
+	fp = fopen("highscore.txt", "r+");
+	if(skor > highscore){
+		printf("\n\nNEW HIGHSCORE!\nhighscore : %d", skor);
+		putw(skor, fp);
+	}
+	else{
+		printf("\nhighscore : %d", highscore);
+	}
+	fclose(fp);
+	
+}
+
+void option_ifKalah_Seri(int *nyawa, int skor){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : menampilkan tampilan saat player kalah
+	IS : tidak muncul pilihan melanjutkan game
+	FS : muncul pilihan melanjutkan game
+	*/
+	
 	int pilihan;
+	int a = *nyawa;
+
+	printf("\n(1)Mengulang ronde ini");
+	printf("\n(2)Keluar\n");
+	printf("\nCatatan : bila anda keluar maka anda harus mengulang dari easy 1");
+	printf("\npilihan anda : ");
+	scanf("%d", &pilihan);
+
+	if(pilihan == 1){
+		return;
+	}
+	else if(pilihan == 2){
+		showHighscore(skor);
+		printf("\nclick any key to continue");getch();
+		a = 0;
+		*nyawa = a;
+		system("cls");
+    	home();
+  }
+  else{
+    printf("Inputan tidak valid, mohon input ulang");
+	option_ifKalah_Seri(&a, skor);
+  }
+}
+
+void option_ifwin(int *nyawa, int skor){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : menampilkan tampilan saat player menang
+	IS : tidak muncul pilihan melanjutkan game bagi pemenang
+	FS : muncul pilihan melanjutkan game bagi pemenang
+	*/
+	
+	int pilihan;
+	int a = *nyawa;
 
 	printf("\n(1)Lanjut\n");
 	printf("(2)Keluar\n");
@@ -64,38 +147,70 @@ void option_ifwin(){
 		return;
 	}
 	else if(pilihan == 2){
+		showHighscore(skor);
+		printf("\nclick any key to continue");getch();
+		a = 0;
+		*nyawa = a;
 		system("cls");
 		home();
 	}
 	else{
 		printf("Inputan tidak valid, mohon input ulang");
-		option_ifwin();
+		option_ifwin(&a, skor);
 	}
 }
 
-void option_ifKalah_Seri(){
-  int pilihan;
-
-  printf("\n(1)Mengulang ronde ini");
-  printf("\n(2)Keluar\n");
-  printf("\nCatatan : bila anda keluar maka anda harus mengulang dari easy 1");
-  printf("\npilihan anda : ");
-  scanf("%d", &pilihan);
-
-  if(pilihan == 1){
-    return;
-  }
-  else if(pilihan == 2){
+void ifGameOver(int a, int b){
+	/* 
+	PIC/Author : 
+	Deskripsi : 
+	IS : 
+	FS : 
+	*/
+	
+	printf("\n\n###  GAME OVER  ###");
+	summary(a,b);
+	showHighscore(b);
+	/*if(b > data.highscore){  //ini gatau gmn kan file
+	    //pseudocode campur2
+	    data.highscore <-- b
+	    printf("!! NEW HIGHSCORE !!");
+	    printf("highscore = %d", b);
+	    write(file data)data.highscore
+  	}
+  	else if(b <= data.highscore){
+    	printf("highscore = %d", data.highscore);
+  	}*/
+	printf("\n\nclick any button to continue to home page");getch();
 	system("cls");
-    home();
-  }
-  else{
-    printf("Inputan tidak valid, mohon input ulang");
-	option_ifKalah_Seri();
-  }
+	home();
+
+}
+
+void ifVictory(int a, int b){
+	/* 
+	PIC/Author :
+	Deskripsi : 
+	IS : 
+	FS : 
+	*/
+	
+	printf("\n>= V I C T O R Y =<");
+	summary(a, b);
+	showHighscore(b);
+	printf("\n\nclick any button to continue to home page");getch();
+	system("cls");
+	home();
+
 }
 
 void board_easy(char arr[3][3]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : Membuat tampilan papan permainan berukuran 3x3
+	IS : tidak ada tampilan papan pada layar
+	FS : muncul tampilan papan berukuran 3x3 pada layar
+	*/
 	
 	printf("  + 1 + 2 + 3 +\n");
 	printf("  +---+---+---+\n");
@@ -108,6 +223,12 @@ void board_easy(char arr[3][3]){
 }
 
 void board_medium(char arr[5][5]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : Membuat tampilan papan permainan berukuran 5x5
+	IS : tidak ada tampilan papan pada layar
+	FS : muncul tampilan papan berukuran 5x5 pada layar
+	*/
 	
 	printf("  + 1 + 2 + 3 + 4 + 5 +\n");
 	printf("  +---+---+---+---+---+\n");
@@ -124,6 +245,12 @@ void board_medium(char arr[5][5]){
 }
 
 void board_hard(char arr[7][7]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : Membuat tampilan papan permainan berukuran 7x7
+	IS : tidak ada tampilan papan pada layar
+	FS : muncul tampilan papan berukuran 7x7 pada layar
+	*/
 	
 	printf("  + 1 + 2 + 3 + 4 + 5 + 6 + 7 +\n");
 	printf("  +---+---+---+---+---+---+---+\n");
@@ -144,6 +271,13 @@ void board_hard(char arr[7][7]){
 }
 
 void input_easy(char arr[3][3]){
+	/* 
+	PIC/Author : Salma Syawalan p.
+	Deskripsi : untuk menginputkan pilihan kotak berukuran 3x3 yang kosong oleh player.
+	IS : array 3x3 masih kosong
+	FS : array 3x3 terisi oleh simbol X
+	*/
+	
 	int baris, kolom;
 	time_t start, end;
 	float waktu;
@@ -181,6 +315,13 @@ void input_easy(char arr[3][3]){
 }
 
 void input_medium(char arr[5][5]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : untuk menginputkan pilihan kotak berukuran 5x5 yang kosong oleh player.
+	IS : array 5x5 masih kosong
+	FS : array 5x5 terisi oleh simbol X
+	*/
+	
 	int baris, kolom;
 	time_t start, end;
 	float waktu;
@@ -219,6 +360,13 @@ void input_medium(char arr[5][5]){
 
 
 void input_hard(char arr[7][7]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : untuk menginputkan pilihan kotak berukuran 7x7 yang kosong oleh player.
+	IS : array 7x7 masih kosong
+	FS : array 7x7 terisi oleh simbol X
+	*/
+	
 	int baris, kolom;
 	time_t start, end;
 	float waktu;
@@ -255,7 +403,11 @@ void input_hard(char arr[7][7]){
 	
 }
 
-int check_easy(char arr[3][3]){
+int checkWin_easy(char arr[3][3]){
+	/* 
+	PIC/Author : Salma Syawalan P
+	Deskripsi : mengecek apakah sudah ada simbol yang membentuk pola di papan permainan ukuran 3x3
+	*/
 
 	int baris, kolom;
 
@@ -305,25 +457,37 @@ int check_easy(char arr[3][3]){
 	
 }
 
-void cek_win(int a){
+void show_WinOrLose(int a){
+	/* 
+	PIC/Author : Salma Syawalan P. 
+	Deskripsi : Menentukan siapakah pemenang dari game tic tac toe berdasarkan nilai return dari modul check_easy, check_medium, atau check_hard.
+	IS : belum ditampilkan keterangan apakah player berada dalam kondisi menang, kalah, atau serinya
+	FS : muncul tampilan yang menyatakan menang, kalah atau seri.
+	*/
+	
 	if(a == -1){
-		printf("\nAnda menang!");getch();
+		printf("\nAnda menang!");
 	}
 	if(a == 1){
-		printf("\nAnda kalah!");getch();
+		printf("\nAnda kalah!");
 	}
 	if(a == 2){
-		printf("\nSeri");getch();
+		printf("\nSeri");
 	}
 }
 
-int minimax(char board[3][3], int player) {
+int minimax_easy(char board[3][3], int player) {
+	/* 
+	PIC/Author : Salma Syawalan
+	Deskripsi : mencari langkah yang memungkinkan untuk komputer di papan permainan berukuran 3x3
+	*/
+	
 	//Tic-tac-toe playing AI. Exhaustive tree-search. WTFPL
 	//Matthew Steel 2009, www.www.repsilat.com
 	//dengan penyesuaian
 	
     //How is the position like for player (their turn) on board?
-    int winner = check_easy(board);
+    int winner = checkWin_easy(board);
     if(winner != 0) return winner*player;
 
     int moveBaris = -1;
@@ -340,7 +504,7 @@ int minimax(char board[3][3], int player) {
 				else if(player == 1){
 					board[i][j] = 'O';//Try the move
 				}
-            	int thisScore = -minimax(board, player*-1);
+            	int thisScore = -minimax_easy(board, player*-1);
             	if(thisScore > skor) {
                 	skor = thisScore; 
                 	moveBaris = i;
@@ -362,6 +526,13 @@ int minimax(char board[3][3], int player) {
 }
 
 void computerMove_easy(char board[3][3]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : menentukan langkah yang akan diambil komputer di papan permainan berukuran 3x3
+	IS : salah satu kotak pada papan 3x3 kosong
+	FS : salah satu kotak pada papan 3x3 sudah terisi oleh simbol O
+	*/
+	
 	//Tic-tac-toe playing AI. Exhaustive tree-search. WTFPL
 	//Matthew Steel 2009, www.www.repsilat.com
 	//dengan penyesuaian
@@ -374,7 +545,7 @@ void computerMove_easy(char board[3][3]){
         for(j=0; j<3; j++){
         	if((board[i][j] != 'X') && (board[i][j] != 'O')) {	//if(board[i][j] == ' ')
             	board[i][j] = 'O';
-            	int tempScore = -minimax(board, -1);
+            	int tempScore = -minimax_easy(board, -1);
             	board[i][j] = ' ';
             	if(tempScore > skor) {
                 	skor = tempScore;
@@ -389,6 +560,11 @@ void computerMove_easy(char board[3][3]){
 }
 
 int checkfull_easy(char arr[3][3]){
+	/* 
+	PIC/Author : Salma Syawalan P. 
+	Deskripsi : mengecek apakah papan permainan berukuran 3x3 sudah terisi penuh atau tidak.
+	*/
+	
 	int baris, kolom;
 	int terisi = 0;
 	
@@ -409,6 +585,13 @@ int checkfull_easy(char arr[3][3]){
 }
 
 void clearBoard_easy(char arr[3][3]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : untuk mengosongkan seluruh isi kotak pada papan permainan 3x3.
+	IS : kotak pada papan 3x3 terisi simbol
+	FS : kotak pada papan 3x3 sudah kosong
+	*/
+	
 	int baris, kolom;
 	for(baris=0; baris<3; baris++){
 		for(kolom=0; kolom<3; kolom++){
@@ -418,6 +601,13 @@ void clearBoard_easy(char arr[3][3]){
 }
 
 void countNyawa_Skor(int winner, int *skor, int *live){
+	/* 
+	PIC/Author : Rifatia Yumna Salma.
+	Deskripsi : menghitung jumlah nyawa milik player yang tersisa.
+	IS : jumlah nyawa player terbilang
+	FS : jumlah nyawa player menjadi tetap atau berkurang
+	*/
+	
 	if(winner == -1){
 		*skor = *skor + 10;
 	}
@@ -432,6 +622,13 @@ void countNyawa_Skor(int winner, int *skor, int *live){
 }
 
 void random_easy(char arr[3][3]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : mengacak kotak pada papan 3x3 yang akan diisi simbol milik player saat player menginput lebih dari 10 detik
+	IS : suatu kotak belum terisi oleh simbol
+	FS : suatu kota terisi oleh simbol X secara acak
+	*/
+	
 	int baris, kolom;
 
 	baris = rand()%3;
@@ -447,6 +644,13 @@ void random_easy(char arr[3][3]){
 }
 
 void tampilan_Easy(int *ronde, int *nyawa, int *score, char arr[3][3]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : menampilkan tampilan game pada level easy.
+	IS : program tidak menampilkan apapun
+	FS : program menampilkan tampilan game level easy.
+	*/
+	
 	time_t start, end;
 	float waktu;
 	int baris, kolom, terisi;
@@ -457,7 +661,7 @@ void tampilan_Easy(int *ronde, int *nyawa, int *score, char arr[3][3]){
 	int live = *nyawa;
 	system("cls");
 	
-	winner = check_easy(arr);
+	winner = checkWin_easy(arr);
 	if(winner == 0){
 		winner = checkfull_easy(arr);
 	}
@@ -471,36 +675,31 @@ void tampilan_Easy(int *ronde, int *nyawa, int *score, char arr[3][3]){
 	printf("\n");
 	
 	
-	cek_win(winner);
+	show_WinOrLose(winner);
 	if(winner == -1){
 		tahap++;
+		clearBoard_easy(arr);
+		summary(live, skor);
+		option_ifwin(&live, skor);
 		*ronde = tahap;
 		*score = skor;
 		*nyawa = live;
-		clearBoard_easy(arr);
-		summary(*nyawa, *score);
-		option_ifwin();
 		return;
 	}
-	if(winner == 1){
+	if((winner == 1) || (winner == 2)) {
+		clearBoard_easy(arr);
+		if (live > 0){
+			summary(live, skor);
+			option_ifKalah_Seri(&live, skor);
+		} 
+		else{
+			ifGameOver(live, skor);
+		}
 		*ronde = tahap;
 		*score = skor;
 		*nyawa = live;
-		clearBoard_easy(arr);
-		summary(*nyawa, *score);
-		option_ifKalah_Seri();
 		return;
 	}
-	if(winner == 2){
-		*ronde = tahap;
-		*score = skor;
-		*nyawa = live;
-		clearBoard_easy(arr);
-		summary(*nyawa, *score);
-		option_ifKalah_Seri();
-		return;
-	}
-	
 	if (winner == 0){
 		start = time (NULL);
 		input_easy(arr);
@@ -519,7 +718,7 @@ void tampilan_Easy(int *ronde, int *nyawa, int *score, char arr[3][3]){
 		skor = skor + 1;
 	}
 
-	winner = check_easy(arr);
+	winner = checkWin_easy(arr);
 	if(winner == 0){
 		computerMove_easy(arr);
 	}
@@ -530,6 +729,11 @@ void tampilan_Easy(int *ronde, int *nyawa, int *score, char arr[3][3]){
 }
 
 int checkfull_medium(char arr[5][5]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : mengecek apakah papan permainan berukuran 5x5 sudah terisi penuh atau tidak.
+	*/
+	
 	int baris, kolom;
 	int terisi = 0;
 	
@@ -549,6 +753,13 @@ int checkfull_medium(char arr[5][5]){
 }
 
 void random_medium(char arr[5][5]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : mengacak kotak pada papan 5x5 yang akan diisi simbol milik player saat player menginput lebih dari 10 detik
+	IS : suatu kotak belum terisi oleh simbol
+	FS : suatu kota terisi oleh simbol X secara acak
+	*/
+	
 	int baris, kolom;
 
 	baris = rand()%5;
@@ -563,7 +774,12 @@ void random_medium(char arr[5][5]){
 	}
 }
 
-int check_medium(char arr[5][5]){
+int checkWin_medium(char arr[5][5]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : mengecek apakah sudah ada simbol yang membentuk pola di papan permainan ukuran 5x5
+	*/
+	
 	int baris, kolom;
 
 	// cek horizontal
@@ -613,6 +829,13 @@ int check_medium(char arr[5][5]){
 }
 
 void clearBoard_medium(char arr[5][5]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : untuk mengosongkan seluruh isi kotak pada papan permainan 5x5.
+	IS : kotak pada papan 5x5 terisi simbol
+	FS : kotak pada papan 5x5 sudah kosong
+	*/
+	
 	int baris, kolom;
 	for(baris=0; baris<5; baris++){
 		for(kolom=0; kolom<5; kolom++){
@@ -622,12 +845,17 @@ void clearBoard_medium(char arr[5][5]){
 }
 
 int minimax_medium(char board[5][5], int player) {
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : mencari langkah yang memungkinkan untuk komputer di papan permainan berukuran 5x5
+	*/
+	
 	//Tic-tac-toe playing AI. Exhaustive tree-search. WTFPL
 	//Matthew Steel 2009, www.www.repsilat.com
 	//dengan penyesuaian
 	
     //How is the position like for player (their turn) on board?
-    int winner = check_medium(board);
+    int winner = checkWin_medium(board);
     if(winner != 0) return winner*player;
 
     int moveBaris = -1;
@@ -666,6 +894,13 @@ int minimax_medium(char board[5][5], int player) {
 }
 
 void computerMove_medium(char board[5][5]){
+	/* 
+	PIC/Author : Rifatia Yumna Salma.
+	Deskripsi : menentukan langkah yang akan diambil komputer di papan permainan berukuran 5x5
+	IS : salah satu kotak pada papan 5x5 kosong
+	FS : salah satu kotak pada papan 5x5 sudah terisi oleh simbol O
+	*/
+	
 	//Tic-tac-toe playing AI. Exhaustive tree-search. WTFPL
 	//Matthew Steel 2009, www.www.repsilat.com
 	//dengan penyesuaian
@@ -693,6 +928,13 @@ void computerMove_medium(char board[5][5]){
 }
 
 void tampilan_Medium(int *ronde, int *nyawa, int *score, char arr[5][5]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : menampilkan tampilan game pada level medium
+	IS : program tidak menampilkan apapun
+	FS : program menampilkan tampilan game level medium.
+	*/
+	
 	time_t start, end;
 	float waktu;
 	int baris, kolom, terisi;
@@ -703,7 +945,7 @@ void tampilan_Medium(int *ronde, int *nyawa, int *score, char arr[5][5]){
 	int live = *nyawa;
 	system("cls");
 	
-	winner = check_medium(arr);
+	winner = checkWin_medium(arr);
 	if(winner == 0){
 		winner = checkfull_medium(arr);
 	}
@@ -717,33 +959,32 @@ void tampilan_Medium(int *ronde, int *nyawa, int *score, char arr[5][5]){
 	printf("\n");
 	
 	
-	cek_win(winner);
+	show_WinOrLose(winner);
 	if(winner == -1){
 		tahap++;
+		
+		clearBoard_medium(arr);
+		summary(live, skor);
+		option_ifwin(&live, skor);
 		*ronde = tahap;
 		*score = skor;
 		*nyawa = live;
-		clearBoard_medium(arr);
-		summary(*nyawa, *score);
-		option_ifwin();
 		return;
 	}
-	if(winner == 1){
+	if((winner == 1) || (winner == 2)){
+		
+		clearBoard_medium(arr);
+		
+		if (live > 0){
+			summary(live, skor);
+			option_ifKalah_Seri(&live, skor);
+		} 
+		else {
+			ifGameOver(live, skor);
+		}
 		*ronde = tahap;
 		*score = skor;
 		*nyawa = live;
-		clearBoard_medium(arr);
-		summary(*nyawa, *score);
-		option_ifKalah_Seri();
-		return;
-	}
-	if(winner == 2){
-		*ronde = tahap;
-		*score = skor;
-		*nyawa = live;
-		clearBoard_medium(arr);
-		summary(*nyawa, *score);
-		option_ifKalah_Seri();
 		return;	
 	}
 	
@@ -765,7 +1006,7 @@ void tampilan_Medium(int *ronde, int *nyawa, int *score, char arr[5][5]){
 		skor = skor + 1;
 	}
 
-	winner = check_medium(arr);
+	winner = checkWin_medium(arr);
 	if(winner == 0){
 		computerMove_medium(arr);
 	}
@@ -776,7 +1017,12 @@ void tampilan_Medium(int *ronde, int *nyawa, int *score, char arr[5][5]){
 	
 }
 
-int check_hard(char arr[7][7]){
+int checkWin_hard(char arr[7][7]){
+	/* 
+	PIC/Author : Salma Syawalan P
+	Deskripsi : mengecek apakah sudah ada simbol yang membentuk pola di papan permainan ukuran 7x7
+	*/
+	
 	int baris, kolom;
 
 	// cek horizontal
@@ -826,6 +1072,11 @@ int check_hard(char arr[7][7]){
 }
 
 int checkfull_hard(char arr[7][7]){
+	/* 
+	PIC/Author : Salma Syawalan P. 
+	Deskripsi : mengecek apakah papan permainan berukuran 7x7 sudah terisi penuh atau tidak.
+	*/
+	
 	int baris, kolom;
 	int terisi = 0;
 	
@@ -846,6 +1097,13 @@ int checkfull_hard(char arr[7][7]){
 }
 
 void clearBoard_hard(char arr[7][7]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : untuk mengosongkan seluruh isi kotak pada papan permainan 7x7.
+	IS : kotak pada papan 7x7 terisi simbol
+	FS : kotak pada papan 7x7 sudah kosong
+	*/
+	
 	int baris, kolom;
 	for(baris=0; baris<7; baris++){
 		for(kolom=0; kolom<7; kolom++){
@@ -856,6 +1114,13 @@ void clearBoard_hard(char arr[7][7]){
 
 
 void randomComputer_hard(char arr[7][7]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : menentukan langkah yang akan diambil komputer di papan permainan berukuran 7x7
+	IS : salah satu kotak pada papan 7x7 kosong
+	FS : salah satu kotak pada papan 7x7 sudah terisi oleh simbol O
+	*/
+	
 	int baris, kolom;
 
 	baris = rand()%7;
@@ -870,6 +1135,13 @@ void randomComputer_hard(char arr[7][7]){
 }
 
 void random_hard(char arr[7][7]){
+	/* 
+	PIC/Author : Rifatia Yumna S.
+	Deskripsi : mengacak kotak pada papan 7x7 yang akan diisi simbol milik player saat player menginput lebih dari 10 detik
+	IS : suatu kotak belum terisi oleh simbol
+	FS : suatu kota terisi oleh simbol X secara acak
+	*/
+	
 	int baris, kolom;
 
 	baris = rand()%7;
@@ -887,6 +1159,13 @@ void random_hard(char arr[7][7]){
 
 
 void tampilan_Hard(int *ronde, int *nyawa, int *score, char arr[7][7]){
+	/* 
+	PIC/Author : Salma Syawalan P.
+	Deskripsi : menampilkan tampilan game pada level hard
+	IS : program tidak menampilkan apapun
+	FS : program menampilkan tampilan game level hard
+	*/
+	
 	time_t start, end;
 	float waktu;
 	int baris, kolom, terisi;
@@ -897,7 +1176,7 @@ void tampilan_Hard(int *ronde, int *nyawa, int *score, char arr[7][7]){
 	int live = *nyawa;
 	system("cls");
 	
-	winner = check_hard(arr);
+	winner = checkWin_hard(arr);
 	if(winner == 0){
 		winner = checkfull_hard(arr);
 	}
@@ -911,33 +1190,34 @@ void tampilan_Hard(int *ronde, int *nyawa, int *score, char arr[7][7]){
 	printf("\n");
 	
 	
-	cek_win(winner);
+	show_WinOrLose(winner);
 	if(winner == -1){
 		tahap++;
+		clearBoard_hard(arr);
+		if (tahap <= 3){
+			summary(live, skor);
+			option_ifwin(&live, skor);
+		}
+		else{
+			ifVictory(live, skor);
+		}
 		*ronde = tahap;
 		*score = skor;
 		*nyawa = live;
-		clearBoard_hard(arr);
-		summary(*nyawa, *score);
-		option_ifwin();
 		return;
 	}
-	if(winner == 1){
+	if((winner==1) || (winner==2)){
+		clearBoard_hard(arr);
+		if (live > 0){
+			summary(live, skor);
+			option_ifKalah_Seri(&live, skor);
+		} 
+		else{
+			ifGameOver(live, skor);
+		}
 		*ronde = tahap;
 		*score = skor;
 		*nyawa = live;
-		clearBoard_hard(arr);
-		summary(*nyawa, *score);
-		option_ifKalah_Seri();
-		return;
-	}
-	if(winner == 2){
-		*ronde = tahap;
-		*score = skor;
-		*nyawa = live;
-		clearBoard_hard(arr);
-		summary(*nyawa, *score);
-		option_ifKalah_Seri();
 		return;
 	}
 	
@@ -958,7 +1238,7 @@ void tampilan_Hard(int *ronde, int *nyawa, int *score, char arr[7][7]){
 		skor = skor + 1;
 	}
 	
-	winner = check_hard(arr);
+	winner = checkWin_hard(arr);
 	if(winner == 0){
 		randomComputer_hard(arr);
 	}
@@ -973,35 +1253,41 @@ void main(){
 	char isi_medium[5][5]={};
 	char isi_hard[7][7]={{},{},{},{},{},{' ', ' ', ' ', ' ', ' ', ' ', ' '},{' ', ' ', ' ', ' ', ' ', ' ', ' '}};
 	int pilihan;
-	int nyawa=3;
-	int score=10;
-	int ronde=1;
+	
+	int on = 1;
 	int baris, kolom;
 	
 	home();
 	
-	//memulai dari level easy (bidak ukuran 3x3)
-	while((ronde<4)&&(nyawa>0)&&(score>0)){
-		tampilan_Easy(&ronde, &nyawa, &score, isi_easy);
-	}	
+	while(on == 1){
+		int nyawa=3;
+		int score=10;
+		int ronde=1;
 	
-	
-	//melanjut ke level medium (bidak ukuran 5x5) jika masih memiliki nyawa
-	if(nyawa>0){
-		ronde = 1;
-		summary(nyawa, score);
-	}
-	while((ronde<4)&&(nyawa>0)&&(score>0)){
-		tampilan_Medium(&ronde, &nyawa, &score, isi_medium);
-	}
-	
-	
-	//melanjut ke level hard (bidak ukuran 7x7) jika masih memiliki nyawa
-	if(nyawa>0){
-		ronde = 1;
-		summary(nyawa, score);
-	}
-	while((ronde<4)&&(nyawa>0)&&(score>0)){
-		tampilan_Hard(&ronde, &nyawa, &score, isi_hard);
+		//memulai dari level easy (bidak ukuran 3x3)
+		while((ronde<4)&&(nyawa>0)&&(score>0)){
+			tampilan_Easy(&ronde, &nyawa, &score, isi_easy);
+			
+		}	
+		
+		
+		//melanjut ke level medium (bidak ukuran 5x5) jika masih memiliki nyawa
+		if(nyawa>0){
+			ronde = 1;
+			summary(nyawa, score);
+		}
+		while((ronde<4)&&(nyawa>0)&&(score>0)){
+			tampilan_Medium(&ronde, &nyawa, &score, isi_medium);
+		}
+		
+		
+		//melanjut ke level hard (bidak ukuran 7x7) jika masih memiliki nyawa
+		if(nyawa>0){
+			ronde = 1;
+			summary(nyawa, score);
+		}
+		while((ronde<4)&&(nyawa>0)&&(score>0)){
+			tampilan_Hard(&ronde, &nyawa, &score, isi_hard);
+		}
 	}
 }
